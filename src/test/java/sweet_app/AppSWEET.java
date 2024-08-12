@@ -1,7 +1,5 @@
 package sweet_app;
 
-import org.checkerframework.checker.units.qual.C;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +23,10 @@ public class AppSWEET {
    private String email;
    private String PhoneNumber;
 
-   private Map<String, UserTP> Valusers = new HashMap<String, UserTP>();
+   private Map<String, UserTP> Valusers = new HashMap<>();
+   private String accountName;
+   private boolean isPasswordUpdated = false;
+   private boolean isAccountNameUpdated = false;
 
    public class UserTP {
       private String userType;
@@ -44,7 +45,6 @@ public class AppSWEET {
       Enterpass = Password;
       Entername = name;
       this.PhoneNumber = PhoneNumber;
-
    }
 
    public void clickLink(String LinkName) throws IllegalAccessException {
@@ -52,14 +52,17 @@ public class AppSWEET {
       switch (LinkName) {
          case "sign_up":
             this.on_the_signup_page = true;
+            break;
          case "forgot password":
             this.on_the_forgotpassword_page = true;
+            break;
+         case "account_settings":
+            // Simulate navigation to account settings
             break;
          default:
             throw new IllegalAccessException("Unknown link: " + LinkName);
       }
    }
-
 
    public void setValusers(List<Map<String, String>> users) {
       for (Map<String, String> user : users) {
@@ -69,16 +72,6 @@ public class AppSWEET {
          Valusers.put(username, new UserTP(password, userType));
       }
    }
-//   public void setValusers(List<Map<String,String>>users){
-//
-//      for (Map<String,String>user:users){
-//         String username=user.get("username");
-//         String password=user.get("password");
-//         String usertype=user.get("usertype");
-//         Valusers.put(username,new UserTP(password,usertype) );
-//      }
-//
-//   }
 
    public String selectpage(String type) {
       switch (type) {
@@ -93,24 +86,14 @@ public class AppSWEET {
       }
    }
 
-   //   public String selectpage(String type){
-//
-//      if(type.equals("user")){
-//         return "userpage";
-//
-//      } else if (type.equals("owner")) {
-//         return "ownerpage";
-//      }
-//      else if(type.equals("rawmaterial")) {return "rawmaterialpage";
-//      }else return "adminpage";
-//   }
+
    public void setPassNAME(String username, String password) {
       Entername = username;
       Enterpass = password;
-
    }
 
    public void loginClicked() {
+      System.out.println("Attempting to log in with username: " + Entername + " and password: " + Enterpass);
       if (Valusers.containsKey(Entername) && Valusers.get(Entername).password.equals(Enterpass)) {
          message = "Welcome, " + Valusers.get(Entername).userType;
          expPage = selectpage(Valusers.get(Entername).userType);
@@ -118,7 +101,57 @@ public class AppSWEET {
          message = "Invalid username or password";
          expPage = "login page";
       }
+      System.out.println("Redirected to page: " + expPage);
    }
+
+
+   public void changeAccountName(String newName) {
+      if (Valusers.containsKey(newName)) {
+         message = "This name is already taken";
+         isAccountNameUpdated = false;
+      } else {
+         accountName = newName;
+         message = "Your account name has been updated to " + newName;
+         isAccountNameUpdated = true;
+      }
+   }
+
+   public void changePassword(String oldPassword, String newPassword) {
+      if (Valusers.containsKey(Entername) && Valusers.get(Entername).password.equals(oldPassword)) {
+         Valusers.get(Entername).password = newPassword;
+         message = "Your password has been successfully changed";
+         isPasswordUpdated = true;
+      } else {
+         message = "Current password is incorrect";
+         isPasswordUpdated = false;
+      }
+   }
+
+   public void saveChanges() {
+      // Simulate saving changes
+   }
+
+   public String getAccountName() {
+      return accountName;
+   }
+
+   public boolean isAccountNameUpdated() {
+      return isAccountNameUpdated;
+   }
+
+   public boolean isPasswordUpdated() {
+      return isPasswordUpdated;
+   }
+
+   public String getMessage() {
+      return message;
+   }
+
+   public String getRedirectedPage() {
+      return expPage;
+   }
+
+   // Existing methods for sign-up validation and error handling
 
    public void signUpClicked() {
       // Reset error flags
@@ -179,19 +212,6 @@ public class AppSWEET {
       expPage = "user";
    }
 
-
-
-
-//   public void loginClicked() {
-//      if (Valusers.containsKey(Entername) && Valusers.get(Entername).equals(Enterpass)) {
-//         message = "Welcome, " + Entername;
-//         expPage = Entername + " dashboard";
-//      } else {
-//         message = "Invalid username or password";
-//         expPage = "login page";
-//      }
-//   }
-
    public String getErrorMessage() {
       if (usernameAlreadyExists) {
          return "Username already exists. Please choose another username.";
@@ -205,13 +225,16 @@ public class AppSWEET {
          return "Sign-up failed. Please check your details.";
       }
    }
-   public String  getMessage(){
-      return message;
 
+   public String[] getUsernameAndPasswordByUserType(String userType) {
+      for (Map.Entry<String, UserTP> entry : Valusers.entrySet()) {
+         if (entry.getValue().userType.equalsIgnoreCase(userType)) {
+            String username = entry.getKey();
+            String password = entry.getValue().password;
+            return new String[]{username, password};
+         }
+      }
+      // Return null if no match is found
+      return null;
    }
-   public String getRedirectedPage() {
-      return expPage;
-   }
-
-
 }
