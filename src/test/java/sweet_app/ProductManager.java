@@ -1,5 +1,7 @@
 package sweet_app;
 
+import io.cucumber.java.an.E;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -97,7 +99,29 @@ public class ProductManager {
     private String errorMessage;
     private static final Logger logger = Logger.getLogger(ProductManager.class.getName());
 
+public void updateProduct(Product product) throws IllegalStateException {
 
+    String name=product.getName();
+    if (!eProduct.containsKey(name)){
+
+        errorMessage="their is no such product named";
+        logger.severe(errorMessage);
+        throw new IllegalStateException(errorMessage);
+    }else {
+                 if(product.getName()==null||
+                product.getName().isEmpty()||
+         product.getDescription().isEmpty()||
+                      product.getPrice()<=0||
+                   product.getQuantity()<=0||
+                product.getDescription()==null){
+                 logger.warning("invalid product details"+product);
+                 errorMessage="invalid details";
+                 throw new IllegalStateException(errorMessage);
+                 }
+                 eProduct.put(name,product);
+                 logger.info("product name "+name+"update successfully");
+    }
+}
     public void addProduct(Product product) throws IllegalAccessException {
         if (productExists(product.getName())) {
 
