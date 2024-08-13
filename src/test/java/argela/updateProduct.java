@@ -18,7 +18,7 @@ public class updateProduct {
     private List<ProductManager.Product> currentProduct;
 
     public updateProduct() {
-        this.proManager = ProductManager.getInstance();
+       proManager = ProductManager.getInstance();
         products = new ArrayList<>();
     }
 
@@ -32,8 +32,8 @@ public class updateProduct {
         ProductManager.Product product;
         currentProduct = new ArrayList<>();
         for (Map<String, String> columns : rows) {
-            name = columns.get("ProductName");
-            quantity = Integer.parseInt(columns.get("NewQuantity"));
+            name = columns.get("productName");
+            quantity = Integer.parseInt(columns.get("quantity"));
             description = columns.get("NewDescription");
             price = Double.parseDouble(columns.get("NewPrice"));
             product = new ProductManager.Product(name, price, quantity, description);
@@ -70,10 +70,10 @@ public class updateProduct {
         ProductManager.Product product;
         currentProduct = new ArrayList<>();
         for (Map<String, String> columns : rows) {
-            name = columns.get("ProductName");
-            quantity = Integer.parseInt(columns.get("NewQuantity"));
-            description = columns.get("NewDescription");
-            price = Double.parseDouble(columns.get("NewPrice"));
+            name = columns.get("productName");
+            quantity = Integer.parseInt(columns.get("quantity"));
+            description = columns.get("description");
+            price = Double.parseDouble(columns.get("price"));
             product = new ProductManager.Product(name, price, quantity, description);
             currentProduct.add(product);
             try {
@@ -108,15 +108,15 @@ public class updateProduct {
         ProductManager.Product product;
         currentProduct = new ArrayList<>();
         for (Map<String, String> columns : rows) {
-            name = columns.get("ProductName");
-            description = columns.get("NewDescription");
+            name = columns.get("productName");
+            description = columns.get("description");
             try {
-                price = Double.parseDouble(columns.get("NewPrice"));
+                price = Double.parseDouble(columns.get("price"));
             } catch (Exception CX) {
                 price = 0;
             }
             try {
-                quantity = Integer.parseInt(columns.get("NewQuantity"));
+                quantity = Integer.parseInt(columns.get("quantity"));
             } catch (Exception CX) {
                 quantity = 0;
             }

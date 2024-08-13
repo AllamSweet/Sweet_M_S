@@ -98,8 +98,20 @@ public class ProductManager {
 
     private String errorMessage;
     private static final Logger logger = Logger.getLogger(ProductManager.class.getName());
+public void removeProduct(String name){
+    logger.info("deleting product :"+name);
+    if(!productExists(name)){
+        errorMessage="product with name "+name+"does not exist";
+        logger.warning(errorMessage);
+      throw new IllegalStateException(errorMessage);
+    }
+    eProduct.remove(name);
 
-public void updateProduct(Product product) throws IllegalStateException {
+    logger.info("deleting product :"+name+"is don");
+
+
+}
+public void updateProduct(Product product) {
 
     String name=product.getName();
     if (!eProduct.containsKey(name)){
