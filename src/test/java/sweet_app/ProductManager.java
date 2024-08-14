@@ -19,24 +19,103 @@ public class ProductManager {
         return instance;
    }
 
+    public SoldItem getSoldItem(String name) {
+        return soldItem.get(name);
+    }
+
     public Product getPrpduct(String name) {
 
         return eProduct.get(name);
     }
-
+    private double totalSales;
+    private double totalProfit;
     private  Map<String, Product> eProduct = new HashMap<>();
+    private  Map<String, SoldItem> soldItem = new HashMap<>();
 
+
+
+
+    public static class SoldItem{
+        private String name;
+        private double price;
+        private int quantitySold;
+        private double totalRevenue;
+        private double costPercentage;
+
+        private double discountPercentage;
+
+
+
+        public SoldItem(String name,double price,double totalRevenue,double costPercentage,int quantitySold,double discountPercentage) {
+            this.discountPercentage = discountPercentage;
+            this.price=price;
+            this.totalRevenue=totalRevenue;
+            this.name=name;
+            this.costPercentage=costPercentage;
+
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public double getPrice() {
+            return price;
+        }
+
+        public void setPrice(double price) {
+            this.price = price;
+        }
+
+        public double getCostPercentage() {
+            return costPercentage;
+        }
+
+        public void setCostPercentage(double costPercentage) {
+            this.costPercentage = costPercentage;
+        }
+
+        public double getDiscountPercentage() {
+            return discountPercentage;
+        }
+
+        public void setDiscountPercentage(double discountPercentage) {
+            this.discountPercentage = discountPercentage;
+        }
+
+        public int getQuantitySold() {
+            return quantitySold;
+        }
+
+        public void setQuantitySold(int quantitySold) {
+            this.quantitySold = quantitySold;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public double getTotalRevenue() {
+            return totalRevenue;
+        }
+
+        public void setTotalRevenue(double totalRevenue) {
+            this.totalRevenue = totalRevenue;
+        }
+    }
     public static class Product {
         private String name;
         private double price;
         private int quantity;
         private String description;
+        private int quantitySold;
 
         public Product(String name, double price, int quantity, String description) {
             this.name = name;
             this.price = price;
             this.quantity = quantity;
             this.description = description;
+           quantitySold=0;
         }
 
         public String getName() {
@@ -89,6 +168,13 @@ public class ProductManager {
                     '}';
         }
 
+        public int getQuantitySold() {
+            return quantitySold;
+        }
+
+        public void setQuantitySold(int quantitySold) {
+            this.quantitySold = quantitySold;
+        }
     }
 
     public boolean productExists(String name) {
@@ -155,4 +241,53 @@ public void updateProduct(Product product) {
     }
 
 
+
+    public void addSellProduct(String name,double price,double totalRevenue,double costPercentage,int quantitySold,double discountPercentage) {
+      if (productExists(name)) {
+          SoldItem soldItem1 = new SoldItem(name, price, totalRevenue, costPercentage, quantitySold, discountPercentage);
+          soldItem.put(soldItem1.getName(), soldItem1);
+      }else {
+          errorMessage="this product ("+name+")"+"dose not exist";
+          logger.warning(errorMessage);
+          throw new IllegalStateException(errorMessage);
+
+      }
+
+    }
+    public double calculateTotalRevenue() {
+        return totalSales;
+    }
+    public double getProfittot() {
+        return totalProfit;
+    }
+
+    public void sellProduct(String name,double costPercentage,int quantitySold){
+    Product product=eProduct.get(name);
+
+    if (product!=null&&product.getQuantity() >= quantitySold){
+        double saleAmount = product.getPrice() * quantitySold;
+        double costAmount = saleAmount * costPercentage/100;
+        double profit = saleAmount-costAmount;
+        totalSales += saleAmount;
+        totalProfit += profit;
+        product.setQuantity(product.getQuantity()-quantitySold);
+        product.setQuantitySold(product.getQuantitySold()+quantitySold);
+    eProduct.put(name,product);
+
+    logger.info("sold"+quantitySold+"of "+name);
+    logger.info("sale amount:"+saleAmount);
+    logger.info("cost amount:"+costAmount);
+    logger.info("profit"+profit);
+    logger.info("update total sales:"+totalSales);
+    logger.info("update total profit:"+totalProfit);
+    }else {
+
+        errorMessage="no product available";
+        logger.warning(errorMessage);
+        throw  new IllegalStateException(errorMessage);
+
+
+    }
+
+    }
 }
