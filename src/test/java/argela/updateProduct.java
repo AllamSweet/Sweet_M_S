@@ -32,10 +32,10 @@ public class updateProduct {
         ProductManager.Product product;
         currentProduct = new ArrayList<>();
         for (Map<String, String> columns : rows) {
-            name = columns.get("productName");
-            quantity = Integer.parseInt(columns.get("quantity"));
-            description = columns.get("NewDescription");
-            price = Double.parseDouble(columns.get("NewPrice"));
+            name = columns.get("ProductName");
+            quantity = Integer.parseInt(columns.get("Quantity"));
+            description = columns.get("Description");
+            price = Double.parseDouble(columns.get("Price"));
             product = new ProductManager.Product(name, price, quantity, description);
             currentProduct.add(product);
             try {
@@ -70,10 +70,10 @@ public class updateProduct {
         ProductManager.Product product;
         currentProduct = new ArrayList<>();
         for (Map<String, String> columns : rows) {
-            name = columns.get("productName");
-            quantity = Integer.parseInt(columns.get("quantity"));
-            description = columns.get("description");
-            price = Double.parseDouble(columns.get("price"));
+            name = columns.get("ProductName");
+            quantity = Integer.parseInt(columns.get("Quantity"));
+            description = columns.get("Description");
+            price = Double.parseDouble(columns.get("Price"));
             product = new ProductManager.Product(name, price, quantity, description);
             currentProduct.add(product);
             try {
@@ -108,15 +108,15 @@ public class updateProduct {
         ProductManager.Product product;
         currentProduct = new ArrayList<>();
         for (Map<String, String> columns : rows) {
-            name = columns.get("productName");
-            description = columns.get("description");
+            name = columns.get("ProductName");
+            description = columns.get("Description");
             try {
-                price = Double.parseDouble(columns.get("price"));
+                price = Double.parseDouble(columns.get("Price"));
             } catch (Exception CX) {
                 price = 0;
             }
             try {
-                quantity = Integer.parseInt(columns.get("quantity"));
+                quantity = Integer.parseInt(columns.get("Quantity"));
             } catch (Exception CX) {
                 quantity = 0;
             }

@@ -24,7 +24,7 @@ public class ProductManager {
         return eProduct.get(name);
     }
 
-    private Map<String, Product> eProduct = new HashMap<>();
+    private  Map<String, Product> eProduct = new HashMap<>();
 
     public static class Product {
         private String name;

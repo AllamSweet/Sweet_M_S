@@ -39,6 +39,7 @@ public class addProduct {
             currentProduct.add(product);
             try {
                 proManager.addProduct(product);
+                System.out.println("product");
                 assertTrue(true);
             } catch (Exception e) {
                 fail();
