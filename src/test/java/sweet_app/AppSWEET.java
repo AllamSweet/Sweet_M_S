@@ -95,7 +95,7 @@ public class AppSWEET {
          throw new IllegalStateException(errorMessage);
       }
       users.put(user.getUsername(), user);
-      pagec = "loginPage";
+      pagec = "login_Page";
       logger.info("User with name: " + user.getUsername() + " signed up successfully.");
    }
    private boolean isValidEmail(String email) {
