@@ -1,15 +1,15 @@
 Feature: Add Product to Sweet Management System
 
 
-  Scenario Outline: Successful addition of a new product
+  Scenario Outline: : : Successful addition of a new product
     When the user adds a product with the following details:
       | ProductName   | Price   | Quantity   | Description   |
       | <productName> | <price> | <quantity> | <description> |
     Then the product should be added successfully
     Examples:
       | productName | price | quantity | description           |
-      | cake        | 20.00 | 10       | Rich_chocolate_cake   |
-      | cakel       | 15.00 | 5        | Classic_vanilla_treat |
+      | cake1        | 20.00 | 10       | Rich_chocolate_cake   |
+      | cake2       | 15.00 | 5        | Classic_vanilla_treat |
 
 
   Scenario Outline: Attempting to add a duplicate product
@@ -20,8 +20,8 @@ Feature: Add Product to Sweet Management System
 
     Examples:
       | productName | price | quantity | description           |
-      | cake       | 20.00 | 10       | Rich_chocolate_cake   |
-      | cakel       | 15.00 | 5        | Classic_vanilla_treat |
+      | cake1       | 20.00 | 10       | Rich_chocolate_cake   |
+      | cake2      | 15.00 | 5        | Classic_vanilla_treat |
 
   Scenario Outline: Attempting to add a product with missing fields
     When the user adds a product with the following missing details:
@@ -46,5 +46,4 @@ Feature: Add Product to Sweet Management System
       | productName    | price | quantity | description       |
       | Brownie        | -5.00 | 5        | Delicious brownie |
       | Chocolate Cake | 15.00 | -1       | Tasty cake        |
-
 

@@ -238,6 +238,7 @@ public void updateProduct(Product product) {
 
         }
         eProduct.put(product.getName(), product);
+        logger.warning("prodct"+product.getName()+"added");
     }
 
 
