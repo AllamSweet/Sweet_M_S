@@ -47,3 +47,12 @@ Feature: update Product to Sweet Management System
       | cake |  | 15 | Rich chocolate cake |
       | cakel | 18.00 |  | Updated vanilla treat |
 
+  Scenario Outline: Successful remove of an existing product
+
+    When the user removes the product "<productName>"
+    Then the product "<productName>" should be removed successfully
+
+    Examples:
+      | productName |
+      | cake        |
+      | cakel      |

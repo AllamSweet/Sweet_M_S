@@ -46,4 +46,3 @@ Feature: Add Product to Sweet Management System
       | productName    | price | quantity | description       |
       | Brownie        | -5.00 | 5        | Delicious brownie |
       | Chocolate Cake | 15.00 | -1       | Tasty cake        |
-
