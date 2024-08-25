@@ -288,36 +288,26 @@ public void setCostPrices(String productName,double price){
         return selPrices.containsKey(productName)&&costPrices.containsKey(productName);
 
     }
-    public void recordSale(String store,String productName,int quantitySold){
-        double sellingPrice=getSelPrices(productName);
-        double costPrice=getCostPrice(productName);
-        double saleAmount=sellingPrice*quantitySold;
-        double profitAmount=(sellingPrice-costPrice)*quantitySold;
-      saveReports();
-        System.out.println(costPrice);
+    public void recordSale(String store,  String productName, int quantitySold) {
+        double sellingPrice = getSelPrices(productName);
+        double costPrice = getCostPrice(productName);
+        double saleAmount = sellingPrice * quantitySold;
+        double profitAmount = (sellingPrice - costPrice) * quantitySold;
+
+        logger.info("Selling Price: " + sellingPrice);
+        logger.info("Cost Price: " + costPrice);
+        logger.info("Sale Amount: " + saleAmount);
+        logger.info("Profit Amount: " + profitAmount);
+
+        totalSale += saleAmount;
+        totalProfit += profitAmount;
+
+        Sale sale = new Sale( productName,0.0,0.0,0.0, quantitySold,0.0, saleAmount, profitAmount);
+        List<Sale> salesList = storSales.computeIfAbsent(store, k -> new ArrayList<>());
+        salesList.add(sale);
+        saveReports();
+        logger.info("Sale recorded: " + productName + " - Quantity: " + quantitySold);
     }
-    public boolean storeExists(String storeName) {
-        return storSales.containsKey(storeName);
-    }
-    public void addProductToStore(String storeName, Sale product) {
-        if (!storeExists(storeName)) {
-            storSales.put(storeName, new ArrayList<>());
-        }
-        storSales.get(storeName).add(product);
-    }
-//    public void recordSale(String storeName, String productName, int quantitySold) {
-//        double sellingPrice = getSelPrices(productName);
-//        double costPrice = getCostPrice(productName);
-//        double saleAmount = sellingPrice * quantitySold;
-//        double profitAmount = (sellingPrice - costPrice) * quantitySold;
-//
-//        // Record the sale
-//        Sale sale = new Sale(productName, sellingPrice, saleAmount,
-//                (costPrice / sellingPrice) * 100,
-//                quantitySold, 0, saleAmount, profitAmount);
-//
-//        addProductToStore(storeName, sale);
-//    }
 
 
 

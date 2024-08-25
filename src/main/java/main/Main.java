@@ -311,7 +311,7 @@ public class Main {
                             scanner.nextLine();
                             switch (userAccountOption) {
                                 case 1:  // Add User Account
-                                    System.out.print("Enter Name: ");
+                                    System.out.print("Enter N   ame: ");
                                     String name = scanner.nextLine();
                                     System.out.print("Enter Role: ");
                                     String role = scanner.nextLine();
@@ -407,7 +407,8 @@ public class Main {
                         break;
                         case 10:viewFinancialReport(storesManager);
                         break;
-                        case 11:
+                        case 11:scanner.close();
+                            return;
 
 
                         default:
@@ -418,8 +419,7 @@ public class Main {
 
 
             case "Owner_Page":
-                System.out.println("Welcome to the Owner Page");
-                // Owner-specific functionality here
+
                 break;
 
             case "User_Page":
