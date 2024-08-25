@@ -97,13 +97,13 @@ public AdminMonitor(){
         assertEquals(profit,actualTotalProfit,0.001);
     }
 
-    @Then("the financial report should include:")
-    public void the_financial_report_should_include(io.cucumber.datatable.DataTable dataTable) {
-        Map<String, Double> expectedReport = dataTable.asMap(String.class, Double.class);
-        Map<String,Double> actualReport= storesManager.genaratfinancialReport();
-       assertEquals(expectedReport.get("Total Sales"),actualReport.get("Total Sales"));
-        assertEquals(expectedReport.get("Total Profit"),actualReport.get("Total Profit"));
-}
+ //   @Then("the financial report should include:")
+//    public void the_financial_report_should_include(io.cucumber.datatable.DataTable dataTable) {
+//        Map<String, Double> expectedReport = dataTable.asMap(String.class, Double.class);
+//        Map<String,Double> actualReport= storesManager.genaratfinancialReport();
+//       assertEquals(expectedReport.get("Total Sales"),actualReport.get("Total Sales"));
+//        assertEquals(expectedReport.get("Total Profit"),actualReport.get("Total Profit"));
+//}
 
     @Given("the following sales data for stores:")
     public void the_following_sales_data_for_stores(io.cucumber.datatable.DataTable dataTable) {

@@ -122,7 +122,7 @@ public class Monitor {
             int quantitySold = Integer.parseInt(productData.get("QuantitySold"));
             double costPercentage = Double.parseDouble(productData.get("CostPercentage"));
             try {
-                proManager.sellProduct(name, costPercentage, quantitySold);
+                proManager.sellProduct(name, quantitySold, costPercentage);
                 assertTrue(true);
             } catch (Exception ex) {
                 assertTrue(false);
@@ -144,11 +144,11 @@ public class Monitor {
             int quantitySold = Integer.parseInt(productData.get("QuantitySold"));
             double costPercentage = Double.parseDouble(productData.get("CostPercentage"));
             try {
-                proManager.sellProduct(name, costPercentage, quantitySold);
+                proManager.sellProduct(name, quantitySold, costPercentage);
                 assertTrue(false);
             } catch (Exception ex) {
                 assertTrue(ex instanceof IllegalStateException);
-                assertTrue(ex.getMessage().contains("no product available"));
+                assertTrue(ex.getMessage().contains("Product not available or insufficient quantity."));
             }
         }
     }

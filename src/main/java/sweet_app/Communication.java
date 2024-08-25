@@ -1,9 +1,14 @@
 package sweet_app;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class Communication {
@@ -11,6 +16,12 @@ public class Communication {
     private static Communication instance;
     private Map<String,Communication.User>users=new HashMap<>();
     private Map<String, List<Message>>messages=new HashMap<>();
+    private static final String USERS_FILE_NAME = "users.txt";
+    private static final Logger LOGGER = Logger.getLogger(Communication.class.getName());
+
+    public Communication() {loadUsers();
+    }
+
     public User getUserByName(String name) {
         return users.get(name);
     }
@@ -137,5 +148,26 @@ public class Communication {
         receiver.addMessage(content);
         receiver.addNotification("You have received a new message from " + sender.getUname());
     }
+    private void loadUsers() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(USERS_FILE_NAME))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",", 7); // Expect 7 fields
+                if (parts.length == 7) {
+                    String username = parts[0].trim();
+                    String role = parts[6].trim(); // Role is the last field
+                    User user = new User(username, role);
+                    users.put(username, user);
+
+                    LOGGER.log(Level.INFO, "User added: Username = {0}, Role = {1}", new Object[]{username, role});
+                } else {
+                    LOGGER.log(Level.WARNING, "Invalid user data format: {0}", line);
+                }
+            }
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Error loading users from file", e);
+        }
+    }
+
 
 }

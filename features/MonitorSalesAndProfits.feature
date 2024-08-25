@@ -31,7 +31,7 @@ Feature: Monitor Sales and Profits
   Scenario: Attempt to view sales and profits with no sales
     Given the following products have not been sold:
       | ProductName | QuantitySold | PricePerUnit | TotalRevenue | CostPercentage |
-      |   cake2   | 5            | 15.00        | 75.00        | 30.0           |
+      |   cakel2   | 17            | 15.00        | 75.00        | 30.0           |
     Then the total revenue should be 345.0
     And the profit should be 181.5
 

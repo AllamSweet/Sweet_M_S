@@ -2,10 +2,128 @@ package main;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.logging.Logger;
+
 import sweet_app.*;
 import sweet_app.StoresManager.Sale;
 
 public class Main {
+    private static void sendMessage(Scanner scanner, Communication communication) {
+        System.out.print("Enter your username: ");
+        String senderName = scanner.nextLine();
+
+        System.out.print("Enter the receiver's username: ");
+        String receiverName = scanner.nextLine();
+
+        System.out.print("Enter the message content: ");
+        String content = scanner.nextLine();
+
+        try {
+            communication.sendMessage(senderName, receiverName, content);
+            System.out.println("Message sent successfully.");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+    private static void sellProduct(Scanner scanner, ProductManager productManager) {
+        System.out.print("Enter the product name to sell: ");
+        String productName = scanner.nextLine();
+
+        System.out.print("Enter the quantity to sell: ");
+        int quantitySold = scanner.nextInt();
+
+        System.out.print("Enter the cost percentage: ");
+        double costPercentage = scanner.nextDouble();
+
+        try {
+            productManager.sellProduct(productName, quantitySold, costPercentage);
+            System.out.println("Product sold successfully.");
+        } catch (IllegalStateException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    private static void addProduct(Scanner scanner, ProductManager productManager) {
+        try {
+            System.out.print("Enter product name: ");
+            String name = scanner.nextLine();
+            System.out.print("Enter product price: ");
+            double price = scanner.nextDouble();
+            System.out.print("Enter product quantity: ");
+            int quantity = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+            System.out.print("Enter product description: ");
+            String description = scanner.nextLine();
+
+            ProductManager.Product product = new ProductManager.Product(name, price, quantity, description);
+            productManager.addProduct(product);
+            System.out.println("Product added successfully.");
+        } catch (IllegalAccessException e) {
+            System.out.println("Failed to add product: " + e.getMessage());
+        }
+    }
+
+    private static void updateProduct(Scanner scanner, ProductManager productManager) {
+        System.out.print("Enter product name to update: ");
+        String name = scanner.nextLine();
+
+        if (productManager.productExists(name)) {
+            System.out.print("Enter new price: ");
+            double price = scanner.nextDouble();
+            System.out.print("Enter new quantity: ");
+            int quantity = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+            System.out.print("Enter new description: ");
+            String description = scanner.nextLine();
+
+            ProductManager.Product product = new ProductManager.Product(name, price, quantity, description);
+            productManager.updateProduct(product);
+            System.out.println("Product updated successfully.");
+        } else {
+            System.out.println("Product not found.");
+        }
+    }
+
+    private static void removeProduct(Scanner scanner, ProductManager productManager) {
+        System.out.print("Enter product name to remove: ");
+        String name = scanner.nextLine();
+
+        try {
+            productManager.removeProduct(name);
+            System.out.println("Product removed successfully.");
+        } catch (IllegalStateException e) {
+            System.out.println("Failed to remove product: " + e.getMessage());
+        }
+    }
+
+    private static void applyDiscount(Scanner scanner, ProductManager productManager) {
+        System.out.print("Enter product name to apply discount: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter discount percentage: ");
+        double discountPercentage = scanner.nextDouble();
+
+        try {
+            productManager.applyDiscount(name, discountPercentage);
+            System.out.println("Discount applied successfully.");
+        } catch (IllegalStateException e) {
+            System.out.println("Failed to apply discount: " + e.getMessage());
+        }
+    }
+
+    private static void viewBestSellingProducts(ProductManager productManager) {
+        List<ProductManager.SoldItem> bestSellingProducts = productManager.getBestSellingProduct();
+        System.out.println("Best-Selling Products:");
+        for (ProductManager.SoldItem item : bestSellingProducts) {
+            System.out.println("Product: " + item.getName() + ", Quantity Sold: " + item.getQuantitySold());
+        }
+    }
+
+    private static void viewTotalSalesAndProfit(ProductManager productManager) {
+        double totalSales = productManager.calculateTotalRevenue();
+        double totalProfit = productManager.getProfittot();
+        System.out.println("Total Sales: $" + totalSales);
+        System.out.println("Total Profit: $" + totalProfit);
+    }
     private static void recordSale(StoresManager storesManager, Scanner scanner) {
         System.out.print("Enter store name: ");
         String storeName = scanner.nextLine();
@@ -56,6 +174,7 @@ public class Main {
     public static void main(String[] args) {
         AppSWEET app = AppSWEET.getInstance();
         Scanner scanner = new Scanner(System.in);
+
 
         while (true) {
             System.out.println("Welcome to the Sweet Management System");
@@ -125,6 +244,7 @@ public class Main {
     public static void redirectToPage(String page, AppSWEET app) {
         Scanner scanner = new Scanner(System.in);
         StoresManager storesManager = StoresManager.getInstance();
+        Communication communication = Communication.getInstance();
 
         ContentManagement contentManagement = ContentManagement.getInstance();
         contentManagement.addFeedback("coky","mesh zaki",0);
@@ -420,7 +540,58 @@ public class Main {
 
             case "Owner_Page":
 
-                break;
+
+
+                ProductManager productManager = ProductManager.getInstance();
+                while (true) {
+                    System.out.println("Owner Menu:");
+                    System.out.println("1. Add Product");
+                    System.out.println("2. Update Product");
+                    System.out.println("3. Remove Product");
+                    System.out.println("4. Apply Discount");
+                    System.out.println("5. View Best-Selling Products");
+                    System.out.println("6. Sell Product");
+                    System.out.println("7. View Total Sales and Profit");
+                    System.out.println("8. Send Message");
+                    System.out.println("9. Exit");
+                    System.out.print("Choose an option: ");
+
+                    int option = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+
+                    switch (option) {
+                        case 1:
+                            addProduct(scanner, productManager);
+                            break;
+                        case 2:
+                            updateProduct(scanner, productManager);
+                            break;
+                        case 3:
+                            removeProduct(scanner, productManager);
+                            break;
+                        case 4:
+                            applyDiscount(scanner, productManager);
+                            break;
+                        case 5:
+                            viewBestSellingProducts(productManager);
+                            break;
+                        case 6:
+                            sellProduct(scanner, productManager);
+                            break;
+                        case 7:
+                            viewTotalSalesAndProfit(productManager);
+                            break;
+                        case 8:
+                            sendMessage(scanner, communication);
+                            break;
+                        case 9:System.out.println("Exiting Owner Menu...");
+                            return;
+                        default:
+                            System.out.println("Invalid option. Please choose again.");
+                            break;
+                    }
+                }
+
 
             case "User_Page":
                 System.out.println("Welcome to the User Page");

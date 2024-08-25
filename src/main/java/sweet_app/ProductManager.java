@@ -270,35 +270,83 @@ public class ProductManager {
         return totalProfit;
     }
 
-    public void sellProduct(String name, double costPercentage, int quantitySold) {
-        Product product = eProduct.get(name);
+//    public void sellProduct(String name, double costPercentage, int quantitySold) {
+//        Product product = eProduct.get(name);
+//
+//        if (product != null && product.getQuantity() >= quantitySold) {
+//            double saleAmount = product.getPrice() * quantitySold;
+//            double costAmount = saleAmount * costPercentage / 100;
+//            double profit = saleAmount - costAmount;
+//            totalSales += saleAmount;
+//            totalProfit += profit;
+//            product.setQuantity(product.getQuantity() - quantitySold);
+//            product.setQuantitySold(product.getQuantitySold() + quantitySold);
+//            eProduct.put(name, product);
+//            logger.warning(name);
+//            logger.info("sold" + quantitySold + "of " + name);
+//            logger.info("sale amount:" + saleAmount);
+//            logger.info("cost amount:" + costAmount);
+//            logger.info("profit" + profit);
+//            logger.info("update total sales:" + totalSales);
+//            logger.info("update total profit:" + totalProfit);
+//        } else {
+//
+//            errorMessage = "no product available";
+//            logger.warning(errorMessage);
+//            throw new IllegalStateException(errorMessage);
+//
+//
+//        }
+//
+//    }
+public void sellProduct(String productName, int quantitySold, double costPercentage) {
+    Product product = eProduct.get(productName);
 
-        if (product != null && product.getQuantity() >= quantitySold) {
-            double saleAmount = product.getPrice() * quantitySold;
-            double costAmount = saleAmount * costPercentage / 100;
-            double profit = saleAmount - costAmount;
-            totalSales += saleAmount;
-            totalProfit += profit;
-            product.setQuantity(product.getQuantity() - quantitySold);
-            product.setQuantitySold(product.getQuantitySold() + quantitySold);
-            eProduct.put(name, product);
-            logger.warning(name);
-            logger.info("sold" + quantitySold + "of " + name);
-            logger.info("sale amount:" + saleAmount);
-            logger.info("cost amount:" + costAmount);
-            logger.info("profit" + profit);
-            logger.info("update total sales:" + totalSales);
-            logger.info("update total profit:" + totalProfit);
-        } else {
-
-            errorMessage = "no product available";
-            logger.warning(errorMessage);
-            throw new IllegalStateException(errorMessage);
-
-
-        }
-
+    if (product == null) {
+        errorMessage = "Product with ID: " + productName + " does not exist.";
+        logger.warning(errorMessage);
+        throw new IllegalStateException(errorMessage);
     }
+
+    if (product.getQuantity() < quantitySold) {
+        errorMessage = "Product not available or insufficient quantity.";
+        logger.warning(errorMessage);
+        throw new IllegalStateException(errorMessage);
+    }
+
+    double saleAmount = product.getPrice() * quantitySold;
+    double costAmount = saleAmount * costPercentage / 100;
+    double profit = saleAmount - costAmount;
+
+    totalSales += saleAmount;
+    totalProfit += profit;
+
+    product.setQuantity(product.getQuantity() - quantitySold);
+    product.setQuantitySold(product.getQuantitySold() + quantitySold);
+
+    eProduct.put(productName, product);
+
+    // Update SoldProduct details
+    SoldItem soldProduct = soldItem.get(productName);
+    if (soldProduct == null) {
+        soldProduct = new SoldItem(productName, product.getPrice(), saleAmount ,costPercentage, quantitySold, 0.0);
+    } else {
+        soldProduct.setQuantitySold(soldProduct.getQuantitySold() + quantitySold);
+        soldProduct.setTotalRevenue(soldProduct.getTotalRevenue() + saleAmount);
+    }
+    soldItem.put(productName, soldProduct);
+
+    logger.info(String.format("Sold %d units of product ID: %s", quantitySold, productName));
+    logger.info(String.format("Sale amount: %.2f", saleAmount));
+    logger.info(String.format("Estimated cost amount: %.2f", costAmount));
+    logger.info(String.format("Calculated profit: %.2f", profit));
+    logger.info(String.format("Total sales updated to: %.2f", totalSales));
+    logger.info(String.format("Total profit updated to: %.2f", totalProfit));
+
+
+}
+
+
 
     public List<SoldItem> getBestSellingProduct() {
 
