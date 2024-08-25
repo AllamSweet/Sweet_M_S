@@ -1,7 +1,5 @@
 package sweet_app;
 
-import argela.GatherAndDisplayStatistics;
-
 import java.util.HashMap;
 import java.util.Map;
 

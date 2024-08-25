@@ -1,7 +1,6 @@
 package argela;
 
 import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
 import sweet_app.ProductManager;
 
 import java.util.ArrayList;

@@ -1,6 +1,5 @@
 package argela;
 
-import io.cucumber.java.bs.I;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import sweet_app.GDisplayStatistics;

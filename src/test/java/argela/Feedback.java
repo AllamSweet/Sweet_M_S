@@ -2,7 +2,6 @@ package argela;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import sweet_app.ContentManagement;
-import sweet_app.ContentManagement.*;
 
 import java.util.ArrayList;
 import java.util.List;

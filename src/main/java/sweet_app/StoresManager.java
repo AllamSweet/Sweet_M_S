@@ -1,13 +1,17 @@
 package sweet_app;
-import io.cucumber.java.an.E;
 
-import java.util.logging.Logger;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 public class StoresManager {
 public static StoresManager instance;
+    private static final String REPORT_FILE = "store_reports.txt";
 
 public String errorMessage="";
 private double totalSale=0.0;
@@ -18,6 +22,61 @@ private Map<String,List<Sale>>storSales=new HashMap<>();
     private Map<String,Double>costPrices=new HashMap<>();
     private static final Logger logger=Logger.getLogger(StoresManager.class.getName());
 
+    public StoresManager() {
+        loadReports();
+
+    }
+
+    private void loadReports() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(REPORT_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 5) {
+                    String store = parts[0].trim();
+
+                    String productName = parts[1].trim();
+                    int quantitySold = Integer.parseInt(parts[2].trim());
+                    double saleAmount = Double.parseDouble(parts[3].trim());
+                    double profitAmount = Double.parseDouble(parts[4].trim());
+
+                    // Provide default values for parameters that are not available in the file
+                    double price = getSelPrices(productName); // You may need to handle cases where the price is not set
+                    double costPercentage = 0.0;
+                    double discountPercentage = 0.0;
+
+                    Sale sale = new Sale(productName, price, saleAmount, costPercentage, quantitySold, discountPercentage, saleAmount, profitAmount);
+                    List<Sale> salesList = storSales.computeIfAbsent(store, k -> new ArrayList<>());
+                    salesList.add(sale);
+                } else {
+                    logger.warning("Invalid report data format: " + line);
+                }
+            }
+        } catch (IOException e) {
+            logger.severe("Error loading reports: " + e.getMessage());
+        }
+    }
+
+    private void saveReports() {
+        try (FileWriter writer = new FileWriter(REPORT_FILE)) {
+            for (Map.Entry<String, List<Sale>> entry : storSales.entrySet()) {
+                String store = entry.getKey();
+                for (Sale sale : entry.getValue()) {
+                    writer.write(serializeSale(store, sale) + System.lineSeparator());
+                }
+            }
+        } catch (IOException e) {
+            logger.severe("Error saving reports: " + e.getMessage());
+        }
+    }
+    private String serializeSale(String store, Sale sale) {
+        return store + "," +
+                sale.getName() + "," +   // Using getName() instead of getProductId()
+                sale.getPrice() + "," +
+                sale.getQuantitySold() + "," +
+                sale.getSaleAmount() + "," +
+                sale.getProfitAmount();
+    }
 
     public static StoresManager getInstance(){
 
@@ -43,6 +102,7 @@ private Map<String,List<Sale>>storSales=new HashMap<>();
         }
         selPrices.put(product.getName(),0.0);
         costPrices.put(product.getName(),0.0);
+        saveReports();
         logger.info("product with name:"+product.name+"added successfully");
 
 
@@ -175,6 +235,7 @@ public void setCostPrices(String productName,double price){
         Map<String,Double>report=new HashMap<>();
         report.put("Total Sales",calculateTotalSales());
         report.put("Total profit",getTotalProfit());
+       saveReports();
         return report;
 
     }
@@ -195,6 +256,7 @@ public void setCostPrices(String productName,double price){
                 if (bestSellingSale != null) {
 
                     bestSellingProducts.put(store, bestSellingSale.getName());
+                    saveReports();
                 }
 
 
@@ -231,8 +293,31 @@ public void setCostPrices(String productName,double price){
         double costPrice=getCostPrice(productName);
         double saleAmount=sellingPrice*quantitySold;
         double profitAmount=(sellingPrice-costPrice)*quantitySold;
+      saveReports();
         System.out.println(costPrice);
     }
+    public boolean storeExists(String storeName) {
+        return storSales.containsKey(storeName);
+    }
+    public void addProductToStore(String storeName, Sale product) {
+        if (!storeExists(storeName)) {
+            storSales.put(storeName, new ArrayList<>());
+        }
+        storSales.get(storeName).add(product);
+    }
+//    public void recordSale(String storeName, String productName, int quantitySold) {
+//        double sellingPrice = getSelPrices(productName);
+//        double costPrice = getCostPrice(productName);
+//        double saleAmount = sellingPrice * quantitySold;
+//        double profitAmount = (sellingPrice - costPrice) * quantitySold;
+//
+//        // Record the sale
+//        Sale sale = new Sale(productName, sellingPrice, saleAmount,
+//                (costPrice / sellingPrice) * 100,
+//                quantitySold, 0, saleAmount, profitAmount);
+//
+//        addProductToStore(storeName, sale);
+//    }
 
 
 

@@ -3,9 +3,6 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import sweet_app.ProductManager;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 

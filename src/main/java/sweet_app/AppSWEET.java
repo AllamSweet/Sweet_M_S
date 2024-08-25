@@ -1,8 +1,9 @@
 package sweet_app;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.logging.Logger;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class AppSWEET {
@@ -11,6 +12,9 @@ public class AppSWEET {
    private String lastErrorMessage;
    private String pagec;
    private static final Logger logger = Logger.getLogger(AppSWEET.class.getName());
+
+   public AppSWEET() {loadUsers();
+   }
 
    public static AppSWEET getInstance() {
       if (instance == null) {
@@ -201,6 +205,25 @@ public class AppSWEET {
       }
    }
 
-
+   public void loadUsers() {
+      try (BufferedReader reader = new BufferedReader(new FileReader("Users.txt"))) {
+         String line;
+         while ((line = reader.readLine()) != null) {
+            String[] userDetails = line.split(",");
+            if (userDetails.length == 7) {
+               String username = userDetails[0];
+               String email = userDetails[1];
+               String password = userDetails[2];
+               String confirmPassword = userDetails[3];
+               String phone = userDetails[4];
+               int age = Integer.parseInt(userDetails[5]);
+               String type = userDetails[6];
+               users.put(username, new User(username, email, password, confirmPassword, phone, age, type));
+            }
+         }
+      } catch (IOException e) {
+         logger.warning("No existing user data found. Starting fresh.");
+      }
+   }
 
 }

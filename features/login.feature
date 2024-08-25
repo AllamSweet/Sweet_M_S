@@ -4,7 +4,7 @@ Feature: Login page
   Scenario:
     Given the following people exist in login table:
       | UserName | Password |Type|
-      | dopah | Allamdopah |admin |
+      | 2 | Allamdopah |admin |
       | tshalb | Allamtshalb |owner |
       | zeft | Allamzeft |user |
   Scenario Outline:  : Successful login with valid input credentials

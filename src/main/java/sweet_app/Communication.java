@@ -1,7 +1,5 @@
 package sweet_app;
 
-import org.openqa.selenium.remote.http.Message;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
