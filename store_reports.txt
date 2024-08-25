@@ -1,0 +1,4 @@
+Store2,allammm,0.0,40,800.0,800.0
+Store,allam,0.0,50,750.0,750.0
+dopahstore,allam,0.0,10,150.0,150.0
+dopahstore,allammm,0.0,20,400.0,400.0
