@@ -42,6 +42,6 @@ jobs:
           
       - name: Build and analyze with SonarCloud
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B jacoco:prepare-agent verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar jacoco:report -Dsonar.projectKey=AllamSweet_Sweet_M_S
